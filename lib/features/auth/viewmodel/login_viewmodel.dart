@@ -32,13 +32,33 @@ class LoginViewModel extends StateNotifier<LoginState> {
     state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
-      // Simulate API verification delay
-      await Future.delayed(const Duration(milliseconds: 1000));
-      await _authRepository.saveEmail(email);
-      state = state.copyWith(isLoading: false);
-      return true;
+      // Small delay for better UX
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      final existingUser = await _authRepository.getUserByEmail(email);
+      
+      if (existingUser == null) {
+        // Case: New User - Automatically register and login
+        await _authRepository.createUser(email, password);
+        await _authRepository.saveEmail(email);
+        state = state.copyWith(isLoading: false);
+        return true;
+      } else {
+        // Case: Existing User - Verify password
+        if (existingUser.password == password) {
+          await _authRepository.saveEmail(email);
+          state = state.copyWith(isLoading: false);
+          return true;
+        } else {
+          state = state.copyWith(
+            isLoading: false, 
+            errorMessage: 'Incorrect password. Please try again.'
+          );
+          return false;
+        }
+      }
     } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+      state = state.copyWith(isLoading: false, errorMessage: 'Authentication error: $e');
       return false;
     }
   }

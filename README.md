@@ -1,254 +1,269 @@
-# Employee Directory
+# 👨‍💼 Employee Directory
 
-A modern Flutter application built as part of a Flutter interview assignment. The app displays employees fetched from a REST API, supports offline caching, favorites, dark mode, and follows a clean **MVVM + Repository** architecture using **Riverpod**.
+<p align="center">
+  <img src="assets/images/logo.png" width="140" alt="Employee Directory Logo">
+</p>
+
+<p align="center">
+A modern <b>Flutter Employee Directory</b> application built using <b>MVVM + Repository Pattern + Riverpod</b>. The application enables administrators to manage employees efficiently with support for offline caching, favorites, profile management, and a clean Material 3 interface.
+</p>
+
+<p align="center">
+
+[![Flutter](https://img.shields.io/badge/Flutter-3.41.x-blue.svg)](https://flutter.dev/)
+[![Dart](https://img.shields.io/badge/Dart-3.9.x-blue.svg)](https://dart.dev/)
+[![Riverpod](https://img.shields.io/badge/Riverpod-State%20Management-purple)]()
+[![License](https://img.shields.io/badge/License-MIT-green.svg)]()
+
+</p>
 
 ---
 
-## 📸 Preview
+# 📱 Download APK
 
-| Login | Home | Employee Details |
-|--------|------|------------------|
-| *(Add Screenshot)* | *(Add Screenshot)* | *(Add Screenshot)* |
+<p align="center">
+
+## ⬇️ **[Download Latest APK](https://github.com/yourusername/employee-directory/releases/latest/download/app-release.apk)**
+
+</p>
+
+> Replace the above URL with your GitHub Releases APK link before publishing.
 
 ---
 
 # ✨ Features
 
-## Required Features
+## 🔐 Authentication
 
-- 🔐 Login Screen (UI Only)
-- 📧 Email Validation
-- 🔑 Password Validation
-- 💾 Login Session Persistence using SharedPreferences
-- 🚀 Auto Login
-- 👨‍💼 Employee List
-- 👤 Employee Detail Screen
-- 🔍 Search Employees
-- 🔄 Pull-to-Refresh
-- ⏳ Loading Indicator
-- ⚠️ Error Handling
-- 📱 Responsive Material 3 UI
+- Login Screen
+- Email Validation
+- Password Validation
+- Auto Login
+- Session Persistence
+- Existing User Recognition
+- Local Authentication
+- Secure User Storage
 
 ---
 
-## Bonus Features
+## 👥 Employee Management
 
-- 🌙 Dark Mode
-- ❤️ Favorite Employees
-- 📦 Offline Caching (Isar)
-- 📄 Client-side Pagination
-- 🧪 Unit Tests
+- View Employees
+- Search Employees
+- Add Employee
+- Edit Employee
+- Delete Employee
+- Employee Details
+- Favorite Employees
+- Pull to Refresh
 
 ---
 
-# 🏗️ Architecture
+## 👤 Admin Profile
 
-The application follows **MVVM (Model–View–ViewModel)** with the **Repository Pattern**.
+- Editable Admin Profile
+- First Login Setup
+- Persistent Profile
+- Read-only Email
+- Material 3 UI
+
+---
+
+## 💾 Offline Support
+
+- Isar Database
+- Offline Caching
+- Cached Employee Data
+- Works without Internet
+
+---
+
+## 🎨 UI
+
+- Material 3
+- Responsive Layout
+- Dark Mode
+- Light Mode
+- Hero Animation
+- Shimmer Loading
+- Error States
+- Empty States
+
+---
+
+# 📸 Screenshots
+
+| Login | All Employees | Add Employee |
+|--------|--|--------------|
+| ![login.jpeg](assets/screenshots/login.jpeg) | ![home.jpeg](assets/screenshots/home.jpeg) | ![add.jpeg](assets/screenshots/add.jpeg) |
+
+| Employee Details | Admin Profile | Settings |
+|------------------|---------------|----------|
+| ![ed.jpeg](assets/screenshots/ed.jpeg) | ![profile.jpeg](assets/screenshots/profile.jpeg) | ![setting.jpeg](assets/screenshots/setting.jpeg) |
+
+
+---
+
+# 🏗 Architecture
+
+The project follows **MVVM Architecture** with the **Repository Pattern**.
 
 ```text
-                 UI (Screens)
-                       │
-                       ▼
-            Riverpod ViewModels
-                       │
-                       ▼
-                Repository Layer
-                 ┌────────────┐
-                 │            │
-                 ▼            ▼
-          Remote API      Local Database
-             (Dio)            (Isar)
+                UI Layer
+            (Flutter Screens)
+
+                    │
+
+                    ▼
+
+          Riverpod ViewModels
+
+                    │
+
+                    ▼
+
+           Repository Pattern
+
+            ┌──────────────┐
+            │              │
+            ▼              ▼
+
+        Remote API      Local Database
+           (Dio)            (Isar)
 ```
-
-### Why This Architecture?
-
-- Separation of Concerns
-- Scalable Project Structure
-- Easy to Test
-- Easy to Maintain
-- Reusable Business Logic
 
 ---
 
-# 📂 Folder Structure
+# 📂 Project Structure
 
 ```text
 lib
 │
 ├── app
-│
 ├── core
-│   ├── constants
-│   ├── database
-│   ├── network
-│   ├── services
-│   ├── utils
-│   └── widgets
-│
 ├── features
 │   ├── auth
 │   ├── employee
 │   └── settings
 │
 ├── routes
-│
-├── generated
-│
 └── main.dart
 ```
 
 ---
 
-# 🛠️ Tech Stack
+# 🛠 Tech Stack
 
-| Technology | Usage |
-|------------|-------|
-| Flutter | UI Development |
+| Technology | Purpose |
+|------------|---------|
+| Flutter | Cross-platform UI |
 | Dart | Programming Language |
 | Riverpod | State Management |
-| Dio | REST API Client |
+| Dio | REST API |
 | Isar | Offline Database |
-| SharedPreferences | Local Storage |
+| SharedPreferences | Authentication Session |
 | GoRouter | Navigation |
 | Material 3 | UI Design |
-| Connectivity Plus | Network Monitoring |
+| Connectivity Plus | Internet Monitoring |
 
 ---
 
 # 📦 Packages Used
 
-| Package | Purpose |
-|---------|---------|
-| flutter_riverpod | State Management |
-| dio | HTTP Client |
-| go_router | Navigation |
-| isar | Local Database |
-| isar_flutter_libs | Native Isar Support |
-| shared_preferences | Login Persistence |
-| connectivity_plus | Connectivity Monitoring |
-| path_provider | Database Path |
-| path | File System Utilities |
-| flutter_svg | SVG Support |
-| intl | Formatting |
-| url_launcher | Launch Website & Maps |
-| shimmer | Loading Animation |
-| equatable | Value Equality |
-| build_runner | Code Generation |
-| isar_generator | Isar Model Generation |
-| mocktail | Unit Testing |
+- flutter_riverpod
+- dio
+- go_router
+- isar
+- isar_flutter_libs
+- shared_preferences
+- connectivity_plus
+- path_provider
+- url_launcher
+- flutter_svg
+- shimmer
+- intl
+- equatable
 
 ---
 
 # 🌐 API
 
-The application fetches employee data from:
+Employee data is fetched from
 
-```
+```text
 https://jsonplaceholder.typicode.com/users
 ```
 
 ---
 
-# 📱 Screens
+# 🚀 Application Flow
 
-## Login
+```text
+Login
 
-- Email Validation
-- Password Validation
-- Login Button
-- Password Visibility Toggle
-- Session Persistence
+      │
+
+      ▼
+
+Employee Directory
+
+      │
+
+ ┌────┼─────────────┐
+ │    │             │
+ ▼    ▼             ▼
+
+All  Favorites   Add Employee
+
+ │
+
+ ▼
+
+Employee Details
+
+ │
+
+ ▼
+
+Edit / Delete
+```
 
 ---
 
-## Home
+# 📋 Modules
+
+## Authentication
+
+- Login
+- Session Storage
+- User Recognition
+- Logout
+
+---
+
+## Employees
 
 - Employee List
 - Search
-- Pull-to-Refresh
-- Loading State
-- Error State
-- Empty State
-- Offline Banner
+- Add
+- Edit
+- Delete
 - Favorites
-- Pagination
 
 ---
 
-## Employee Details
+## Profile
 
-Displays:
-
-- Avatar
-- Name
-- Username
-- Email
-- Phone
-- Website
-- Company
-- Address
-- Google Maps
-- Favorite Button
+- Admin Profile
+- Edit Profile
+- Save Profile
 
 ---
 
-# 📦 Offline Caching
+## Settings
 
-Employee data is automatically cached using **Isar**.
-
-### Online
-
-```text
-API
-   │
-   ▼
-Save into Isar
-   │
-   ▼
-Display Latest Data
-```
-
-### Offline
-
-```text
-Read from Isar
-      │
-      ▼
-Display Cached Employees
-```
-
-A banner is displayed when cached data is being shown.
-
----
-
-# ❤️ Favorites
-
-Users can
-
-- Mark Employees as Favorite
-- Remove Favorites
-- Persist Favorites Locally
-- Filter Favorite Employees
-
----
-
-# 🌙 Dark Mode
-
-Supports
-
-- Light Theme
-- Dark Theme
-- System Theme
-
-Theme preference is saved locally.
-
----
-
-# 📄 Pagination
-
-The JSONPlaceholder API contains only 10 employees.
-
-Client-side pagination is implemented by loading employees in batches.
+- Dark Mode
+- Logout
 
 ---
 
@@ -256,12 +271,12 @@ Client-side pagination is implemented by loading employees in batches.
 
 ## Prerequisites
 
-- Flutter SDK **3.35.x**
+- Flutter SDK **3.41.x**
 - Dart SDK **3.9.x**
-- Android Studio / VS Code
+- Android Studio or VS Code
 - Git
 
-Verify Flutter installation:
+Verify installation
 
 ```bash
 flutter doctor
@@ -269,33 +284,39 @@ flutter doctor
 
 ---
 
-## Installation
-
-Clone the repository
+## Clone Repository
 
 ```bash
 git clone https://github.com/yourusername/employee-directory.git
 ```
 
-Navigate to the project
+---
+
+## Navigate
 
 ```bash
 cd employee-directory
 ```
 
-Install dependencies
+---
+
+## Install Packages
 
 ```bash
 flutter pub get
 ```
 
-Generate Isar files
+---
+
+## Generate Isar Files
 
 ```bash
 dart run build_runner build --delete-conflicting-outputs
 ```
 
-Run the application
+---
+
+## Run Application
 
 ```bash
 flutter run
@@ -303,9 +324,7 @@ flutter run
 
 ---
 
-# 🧪 Running Tests
-
-Run all tests
+# 🧪 Run Tests
 
 ```bash
 flutter test
@@ -315,13 +334,13 @@ flutter test
 
 # 📦 Build APK
 
-Debug APK
+Debug
 
 ```bash
 flutter build apk
 ```
 
-Release APK
+Release
 
 ```bash
 flutter build apk --release
@@ -339,59 +358,53 @@ build/app/outputs/flutter-apk/app-release.apk
 
 | Tool | Version |
 |------|---------|
-| Flutter | 3.35.x |
+| Flutter | 3.41.x |
 | Dart | 3.9.x |
 
-> Replace these with the exact versions from `flutter --version` before submitting.
+> Replace with the exact output of `flutter --version` before publishing.
 
 ---
 
-# 📋 Assumptions
+# 📖 Assumptions
 
-- Authentication is UI-only; no backend authentication is implemented.
-- Employee data is fetched from the public JSONPlaceholder API.
-- Pagination is implemented on the client side because the API returns only 10 records.
-- Favorites are stored locally on the device.
-- Cached employee data is shown when the device is offline.
-- Google Maps functionality depends on the availability of latitude and longitude from the API.
-- Theme preference and login session persist across app restarts.
+- Authentication is local only.
+- Email acts as the unique identifier.
+- Existing users must log in using the original password.
+- Employee data from the API is cached locally.
+- Added employees are stored locally.
+- The administrator profile is separate from employee records.
+- Offline mode displays cached employee data.
+- Favorites persist locally.
 
 ---
 
 # 🚀 Future Improvements
 
-- Backend Authentication
-- Infinite Scrolling API
-- Employee Editing
-- Profile Images
-- Sorting Employees
+- Firebase Authentication
+- Cloud Sync
+- Employee Images
+- Role-based Access
 - Multi-language Support
+- Push Notifications
 - Integration Tests
 - CI/CD Pipeline
-- Push Notifications
 
 ---
 
-# 📖 Design Principles
+# 👨‍💻 Developed By
 
-- MVVM Architecture
-- Repository Pattern
-- Single Responsibility Principle
-- Clean Code Practices
-- Reusable Widgets
-- Responsive Design
-- Material 3 Guidelines
-
----
-
-# 👨‍💻 Developer
-
-**Vachaspati Mishra**
+**Lucky**
 
 Flutter Developer
 
 ---
 
+# ⭐ Support
+
+If you found this project useful, consider giving it a ⭐ on GitHub!
+
+---
+
 # 📄 License
 
-This project was developed for a Flutter interview assessment and is intended for demonstration and evaluation purposes.
+This project was developed for a Flutter interview assessment and educational purposes.

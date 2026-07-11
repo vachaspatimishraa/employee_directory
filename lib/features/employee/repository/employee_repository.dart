@@ -5,4 +5,6 @@ abstract class EmployeeRepository {
   Future<void> toggleFavorite(int id);
   Future<List<EmployeeModel>> getFavorites();
   Future<EmployeeModel?> getEmployeeDetails(int id);
+  Future<void> addEmployee(EmployeeModel employee);
+  Future<void> deleteEmployee(int id);
 }

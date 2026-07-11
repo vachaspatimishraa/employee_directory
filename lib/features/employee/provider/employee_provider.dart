@@ -8,6 +8,7 @@ import '../repository/employee_repository.dart';
 import '../repository/employee_repository_impl.dart';
 import '../viewmodel/employee_state.dart';
 import '../viewmodel/employee_viewmodel.dart';
+import '../../auth/provider/auth_provider.dart';
 
 final connectivityServiceProvider = Provider<ConnectivityService>((ref) {
   final service = ConnectivityService();
@@ -39,5 +40,6 @@ final employeeViewModelProvider = StateNotifierProvider<EmployeeViewModel, Emplo
   return EmployeeViewModel(
     ref.watch(employeeRepositoryProvider),
     ref.watch(connectivityServiceProvider),
+    ref.watch(authRepositoryProvider),
   );
 });

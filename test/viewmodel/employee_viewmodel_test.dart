@@ -5,12 +5,16 @@ import 'package:employee_directory/features/employee/repository/employee_reposit
 import 'package:employee_directory/features/employee/model/employee_model.dart';
 import 'package:employee_directory/core/network/connectivity_service.dart';
 
+import 'package:employee_directory/features/auth/repository/auth_repository.dart';
+
 class MockEmployeeRepository extends Mock implements EmployeeRepository {}
 class MockConnectivityService extends Mock implements ConnectivityService {}
+class MockAuthRepository extends Mock implements AuthRepository {}
 
 void main() {
   late MockEmployeeRepository mockRepository;
   late MockConnectivityService mockConnectivityService;
+  late MockAuthRepository mockAuthRepository;
   late EmployeeViewModel viewModel;
 
   final mockEmployees = List.generate(
@@ -27,11 +31,14 @@ void main() {
     mockRepository = MockEmployeeRepository();
     mockConnectivityService = MockConnectivityService();
     
+    mockAuthRepository = MockAuthRepository();
+    
     when(() => mockConnectivityService.connectivityStream).thenAnswer((_) => const Stream.empty());
     when(() => mockConnectivityService.isConnected).thenAnswer((_) async => true);
     when(() => mockRepository.getEmployees(forceRefresh: any(named: 'forceRefresh'))).thenAnswer((_) async => mockEmployees);
+    when(() => mockAuthRepository.getEmail()).thenReturn('admin@example.com');
 
-    viewModel = EmployeeViewModel(mockRepository, mockConnectivityService);
+    viewModel = EmployeeViewModel(mockRepository, mockConnectivityService, mockAuthRepository);
   });
 
   group('EmployeeViewModel Tests', () {

@@ -25,4 +25,12 @@ class SharedPrefService {
   Future<bool> setIsDarkMode(bool value) async {
     return await _prefs.setBool(StorageKeys.themeMode, value);
   }
+
+  Future<bool> saveAdminProfile(String jsonStr) async {
+    return await _prefs.setString(StorageKeys.adminProfile, jsonStr);
+  }
+
+  String? getAdminProfile() {
+    return _prefs.getString(StorageKeys.adminProfile);
+  }
 }

@@ -10,6 +10,7 @@ import '../../../core/widgets/error_widget.dart';
 import '../../../core/widgets/empty_widget.dart';
 import '../../settings/view/settings_bottom_sheet.dart';
 import '../../../routes/route_names.dart';
+import 'add_employee_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -18,25 +19,14 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  int _selectedIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    _tabController.addListener(_handleTabSelection);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  void _handleTabSelection() {
-    if (_tabController.indexIsChanging) return;
-    final showFavorites = _tabController.index == 1;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    final showFavorites = index == 1;
     ref.read(employeeViewModelProvider.notifier).toggleFavoritesFilter(showFavorites);
   }
 
@@ -56,46 +46,65 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.account_circle_rounded),
+          onPressed: () => context.push(RouteNames.adminProfile),
+        ),
         title: Text(
-          'Employee Directory',
+          _selectedIndex == 2 ? 'Add Employee' : 'Employee Directory',
           style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings_rounded),
+            icon: const Icon(Icons.settings_outlined),
             onPressed: () => _showSettings(context),
           ),
         ],
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'All Employees'),
-            Tab(text: 'Favorites'),
-          ],
-          indicatorColor: theme.colorScheme.primary,
-          labelColor: theme.colorScheme.primary,
-          unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.6),
-        ),
       ),
       body: Column(
         children: [
-          CachedBanner(isVisible: employeeState.isOffline),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: EmployeeSearchBar(
-              onChanged: (value) {
-                ref.read(employeeViewModelProvider.notifier).searchEmployees(value);
-              },
+          if (_selectedIndex != 2) CachedBanner(isVisible: employeeState.isOffline),
+          if (_selectedIndex != 2)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: EmployeeSearchBar(
+                onChanged: (value) {
+                  ref.read(employeeViewModelProvider.notifier).searchEmployees(value);
+                },
+              ),
             ),
-          ),
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
+            child: IndexedStack(
+              index: _selectedIndex,
               children: [
-                _AllEmployeesTab(),
-                _FavoritesTab(),
+                _EmployeesListTab(isFavorites: false),
+                _EmployeesListTab(isFavorites: true),
+                AddEmployeeScreen(
+                  onSaved: () => _onItemTapped(0),
+                ),
               ],
             ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onItemTapped,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.people_outline),
+            selectedIcon: Icon(Icons.people),
+            label: 'All',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.favorite_outline),
+            selectedIcon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_add_outlined),
+            selectedIcon: Icon(Icons.person_add),
+            label: 'Add',
           ),
         ],
       ),
@@ -103,12 +112,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
   }
 }
 
-class _AllEmployeesTab extends ConsumerStatefulWidget {
+class _EmployeesListTab extends ConsumerStatefulWidget {
+  final bool isFavorites;
+  const _EmployeesListTab({required this.isFavorites});
+
   @override
-  ConsumerState<_AllEmployeesTab> createState() => _AllEmployeesTabState();
+  ConsumerState<_EmployeesListTab> createState() => _EmployeesListTabState();
 }
 
-class _AllEmployeesTabState extends ConsumerState<_AllEmployeesTab> {
+class _EmployeesListTabState extends ConsumerState<_EmployeesListTab> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -124,8 +136,32 @@ class _AllEmployeesTabState extends ConsumerState<_AllEmployeesTab> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 50) {
+    if (!widget.isFavorites && _scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 50) {
       ref.read(employeeViewModelProvider.notifier).managePagination();
+    }
+  }
+
+  Future<void> _deleteEmployee(int id) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Employee?'),
+        content: const Text('This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      await ref.read(employeeViewModelProvider.notifier).deleteEmployee(id);
     }
   }
 
@@ -150,9 +186,12 @@ class _AllEmployeesTabState extends ConsumerState<_AllEmployeesTab> {
     final filtered = employeeState.filteredEmployees;
 
     if (filtered.isEmpty) {
-      return const EmptyWidget(
-        title: 'No Employees Found',
-        description: 'Try searching for another name or email.',
+      return EmptyWidget(
+        title: widget.isFavorites ? 'No Favorites Found' : 'No Employees Found',
+        description: widget.isFavorites 
+            ? 'Mark employees as favorite to see them here.' 
+            : 'Try searching for another name or email.',
+        icon: widget.isFavorites ? Icons.favorite_border_rounded : Icons.search_off_rounded,
       );
     }
 
@@ -161,7 +200,7 @@ class _AllEmployeesTabState extends ConsumerState<_AllEmployeesTab> {
       child: ListView.builder(
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: filtered.length + (employeeState.hasMoreData ? 1 : 0),
+        itemCount: filtered.length + (!widget.isFavorites && employeeState.hasMoreData ? 1 : 0),
         itemBuilder: (context, index) {
           if (index == filtered.length) {
             return const Padding(
@@ -177,41 +216,16 @@ class _AllEmployeesTabState extends ConsumerState<_AllEmployeesTab> {
           }
 
           final employee = filtered[index];
-          return EmployeeCard(
-            employee: employee,
-            onTap: () => context.push(RouteNames.employeeDetail, extra: employee.id),
-            onFavoriteTap: () => ref.read(employeeViewModelProvider.notifier).toggleFavorite(employee.id),
+          return GestureDetector(
+            onLongPress: () => _deleteEmployee(employee.id),
+            child: EmployeeCard(
+              employee: employee,
+              onTap: () => context.push(RouteNames.employeeDetail, extra: employee),
+              onFavoriteTap: () => ref.read(employeeViewModelProvider.notifier).toggleFavorite(employee.id),
+            ),
           );
         },
       ),
-    );
-  }
-}
-
-class _FavoritesTab extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final employeeState = ref.watch(employeeViewModelProvider);
-    final filtered = employeeState.filteredEmployees;
-
-    if (filtered.isEmpty) {
-      return const EmptyWidget(
-        title: 'No Favorites Found',
-        description: 'Mark employees as favorite to see them here.',
-        icon: Icons.favorite_border_rounded,
-      );
-    }
-
-    return ListView.builder(
-      itemCount: filtered.length,
-      itemBuilder: (context, index) {
-        final employee = filtered[index];
-        return EmployeeCard(
-          employee: employee,
-          onTap: () => context.push(RouteNames.employeeDetail, extra: employee.id),
-          onFavoriteTap: () => ref.read(employeeViewModelProvider.notifier).toggleFavorite(employee.id),
-        );
-      },
     );
   }
 }

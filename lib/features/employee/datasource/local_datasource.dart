@@ -7,6 +7,7 @@ abstract class LocalDatasource {
   Future<void> updateEmployee(EmployeeModel employee);
   Future<List<EmployeeModel>> getFavoriteEmployees();
   Future<EmployeeModel?> getEmployeeById(int id);
+  Future<void> deleteEmployee(int id);
 }
 
 class LocalDatasourceImpl implements LocalDatasource {
@@ -48,5 +49,12 @@ class LocalDatasourceImpl implements LocalDatasource {
   @override
   Future<EmployeeModel?> getEmployeeById(int id) async {
     return await _isar.employeeModels.get(id);
+  }
+
+  @override
+  Future<void> deleteEmployee(int id) async {
+    await _isar.writeTxn(() async {
+      await _isar.employeeModels.delete(id);
+    });
   }
 }

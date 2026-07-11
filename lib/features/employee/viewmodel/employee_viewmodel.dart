@@ -1,16 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../repository/employee_repository.dart';
 import '../../../core/network/connectivity_service.dart';
+import '../../auth/repository/auth_repository.dart';
 import 'employee_state.dart';
 import '../model/employee_model.dart';
 
 class EmployeeViewModel extends StateNotifier<EmployeeState> {
   final EmployeeRepository _repository;
   final ConnectivityService _connectivityService;
+  final AuthRepository _authRepository;
   String _currentQuery = '';
   bool _showOnlyFavorites = false;
 
-  EmployeeViewModel(this._repository, this._connectivityService) : super(EmployeeState()) {
+  EmployeeViewModel(
+    this._repository,
+    this._connectivityService,
+    this._authRepository,
+  ) : super(EmployeeState()) {
     loadEmployees();
     _monitorConnection();
   }
@@ -71,13 +77,20 @@ class EmployeeViewModel extends StateNotifier<EmployeeState> {
   }
 
   void _updatePagedState({required List<EmployeeModel> allData, required int page, bool? isOffline}) {
-    final limit = page * 5;
-    final hasMore = allData.length > limit;
+    final adminEmail = _authRepository.getEmail()?.toLowerCase().trim();
     
-    final sliced = allData.take(limit).toList();
+    // Filter out administrator
+    final filteredData = allData.where((emp) {
+      return emp.email?.toLowerCase().trim() != adminEmail;
+    }).toList();
+
+    final limit = page * 5;
+    final hasMore = filteredData.length > limit;
+    
+    final sliced = filteredData.take(limit).toList();
     
     state = state.copyWith(
-      allEmployees: allData,
+      allEmployees: filteredData,
       employees: sliced,
       currentPage: page,
       hasMoreData: hasMore,
@@ -85,6 +98,16 @@ class EmployeeViewModel extends StateNotifier<EmployeeState> {
       isLoading: false,
     );
     _applyFilters();
+  }
+
+  Future<void> addEmployee(EmployeeModel employee) async {
+    await _repository.addEmployee(employee);
+    await loadEmployees();
+  }
+
+  Future<void> deleteEmployee(int id) async {
+    await _repository.deleteEmployee(id);
+    await loadEmployees();
   }
 
   void _applyFilters() {

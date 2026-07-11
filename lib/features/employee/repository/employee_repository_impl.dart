@@ -83,4 +83,14 @@ class EmployeeRepositoryImpl implements EmployeeRepository {
   Future<EmployeeModel?> getEmployeeDetails(int id) async {
     return await _localDatasource.getEmployeeById(id);
   }
+
+  @override
+  Future<void> addEmployee(EmployeeModel employee) async {
+    await _localDatasource.updateEmployee(employee);
+  }
+
+  @override
+  Future<void> deleteEmployee(int id) async {
+    await _localDatasource.deleteEmployee(id);
+  }
 }
