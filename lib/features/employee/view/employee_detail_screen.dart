@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../provider/employee_provider.dart';
+import '../model/employee_model.dart';
 import '../widgets/detail_header.dart';
 import '../widgets/detail_card.dart';
 import '../widgets/company_card.dart';
@@ -49,16 +50,8 @@ class EmployeeDetailScreen extends ConsumerWidget {
     final employeeState = ref.watch(employeeViewModelProvider);
 
     // Find the employee from the state
-    EmployeeModel? employee;
-    try {
-      employee = employeeState.allEmployees.firstWhere((emp) => emp.id == employeeId);
-    } catch (_) {
-      try {
-        employee = employeeState.employees.firstWhere((emp) => emp.id == employeeId);
-      } catch (_) {
-        employee = null;
-      }
-    }
+    final match = employeeState.employees.where((emp) => emp.id == employeeId).toList();
+    final EmployeeModel? employee = match.isNotEmpty ? match.first : null;
 
     if (employee == null) {
       return Scaffold(

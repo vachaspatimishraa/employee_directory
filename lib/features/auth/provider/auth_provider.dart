@@ -5,7 +5,7 @@ import '../viewmodel/login_state.dart';
 import '../viewmodel/login_viewmodel.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return AuthRepository(ref.watch(sharedPrefServiceProvider));
+  return AuthRepository(ref.read(sharedPrefServiceProvider));
 });
 
 final loginViewModelProvider = StateNotifierProvider<LoginViewModel, LoginState>((ref) {

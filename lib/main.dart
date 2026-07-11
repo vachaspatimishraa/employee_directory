@@ -7,22 +7,35 @@ import 'features/settings/provider/theme_provider.dart';
 import 'app/app.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize SharedPreferences
-  final sharedPreferences = await SharedPreferences.getInstance();
+    // Initialize SharedPreferences
+    final sharedPreferences = await SharedPreferences.getInstance();
 
-  // Initialize Isar
-  final isarService = IsarService();
-  await isarService.init();
+    // Initialize Isar
+    final isarService = IsarService();
+    await isarService.init();
 
-  runApp(
-    ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-        isarServiceProvider.overrideWithValue(isarService),
-      ],
-      child: const MyApp(),
-    ),
-  );
+    runApp(
+      ProviderScope(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+          isarServiceProvider.overrideWithValue(isarService),
+        ],
+        child: const MyApp(),
+      ),
+    );
+  } catch (e) {
+    debugPrint('Initialization error: $e');
+    runApp(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: Text('Failed to initialize the app: $e'),
+          ),
+        ),
+      ),
+    );
+  }
 }

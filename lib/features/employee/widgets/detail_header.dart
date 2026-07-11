@@ -22,7 +22,7 @@ class DetailHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Hero(
-          tag: employeeId,
+          tag: 'employee_$employeeId',
           child: EmployeeAvatar(
             name: name,
             size: 110,

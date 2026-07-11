@@ -20,18 +20,18 @@ final dioClientProvider = Provider<DioClient>((ref) {
 });
 
 final remoteDatasourceProvider = Provider<RemoteDatasource>((ref) {
-  return RemoteDatasourceImpl(ref.watch(dioClientProvider));
+  return RemoteDatasourceImpl(ref.read(dioClientProvider));
 });
 
 final localDatasourceProvider = Provider<LocalDatasource>((ref) {
-  return LocalDatasourceImpl(ref.watch(isarProvider));
+  return LocalDatasourceImpl(ref.read(isarProvider));
 });
 
 final employeeRepositoryProvider = Provider<EmployeeRepository>((ref) {
   return EmployeeRepositoryImpl(
-    ref.watch(remoteDatasourceProvider),
-    ref.watch(localDatasourceProvider),
-    ref.watch(connectivityServiceProvider),
+    ref.read(remoteDatasourceProvider),
+    ref.read(localDatasourceProvider),
+    ref.read(connectivityServiceProvider),
   );
 });
 

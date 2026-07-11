@@ -24,6 +24,7 @@ class EmployeeRepositoryImpl implements EmployeeRepository {
     if (!isOnline) {
       final cached = await _localDatasource.getCachedEmployees();
       if (cached.isNotEmpty) {
+        AppLogger.d('Serving cached data offline');
         return cached;
       }
       throw Exception('No internet connection and no cached data available.');
@@ -32,9 +33,17 @@ class EmployeeRepositoryImpl implements EmployeeRepository {
     if (forceRefresh) {
       try {
         final remoteData = await _remoteDatasource.fetchEmployees();
+        if (remoteData.isEmpty) {
+          throw Exception('No employees found on server.');
+        }
         await _localDatasource.cacheEmployees(remoteData);
       } catch (e) {
         AppLogger.e('Failed to fetch from remote, serving cache', e);
+        final cached = await _localDatasource.getCachedEmployees();
+        if (cached.isNotEmpty) {
+          return cached;
+        }
+        rethrow;
       }
     } else {
       final cached = await _localDatasource.getCachedEmployees();
@@ -43,6 +52,9 @@ class EmployeeRepositoryImpl implements EmployeeRepository {
       }
       try {
         final remoteData = await _remoteDatasource.fetchEmployees();
+        if (remoteData.isEmpty) {
+          throw Exception('No employees found on server.');
+        }
         await _localDatasource.cacheEmployees(remoteData);
       } catch (e) {
         AppLogger.e('Failed to fetch from remote', e);

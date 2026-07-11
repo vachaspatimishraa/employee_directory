@@ -24,7 +24,7 @@ class EmployeeCard extends StatelessWidget {
         onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: Hero(
-          tag: employee.id,
+          tag: 'employee_${employee.id}',
           child: EmployeeAvatar(name: employee.name ?? '', size: 50),
         ),
         title: Text(

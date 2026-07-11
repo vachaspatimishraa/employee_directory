@@ -67,8 +67,7 @@ class EmployeeViewModel extends StateNotifier<EmployeeState> {
   Future<void> toggleFavorite(int id) async {
     await _repository.toggleFavorite(id);
     final updatedList = await _repository.getEmployees();
-    state = state.copyWith(allEmployees: updatedList);
-    _applyFilters();
+    _updatePagedState(allData: updatedList, page: state.currentPage);
   }
 
   void _updatePagedState({required List<EmployeeModel> allData, required int page, bool? isOffline}) {
