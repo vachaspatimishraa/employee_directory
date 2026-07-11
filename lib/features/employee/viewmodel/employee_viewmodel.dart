@@ -1,41 +1,29 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../repository/employee_repository.dart';
-import '../../../core/network/connectivity_service.dart';
 import '../../auth/repository/auth_repository.dart';
 import 'employee_state.dart';
 import '../model/employee_model.dart';
 
 class EmployeeViewModel extends StateNotifier<EmployeeState> {
   final EmployeeRepository _repository;
-  final ConnectivityService _connectivityService;
   final AuthRepository _authRepository;
   String _currentQuery = '';
   bool _showOnlyFavorites = false;
 
   EmployeeViewModel(
     this._repository,
-    this._connectivityService,
     this._authRepository,
   ) : super(EmployeeState()) {
     loadEmployees();
-    _monitorConnection();
   }
 
-  void _monitorConnection() {
-    _connectivityService.connectivityStream.listen((isOnline) {
-      state = state.copyWith(isOffline: !isOnline);
-    });
-  }
-
-  Future<void> loadEmployees({bool forceRefresh = false}) async {
+  Future<void> loadEmployees() async {
     if (state.isLoading) return;
     
     state = state.copyWith(isLoading: true, isError: false, errorMessage: null);
     try {
-      final isOnline = await _connectivityService.isConnected;
-      final data = await _repository.getEmployees(forceRefresh: forceRefresh);
-      
-      _updatePagedState(allData: data, page: 1, isOffline: !isOnline);
+      final data = await _repository.getEmployees();
+      _updatePagedState(allData: data, page: 1);
     } catch (e) {
       state = state.copyWith(isLoading: false, isError: true, errorMessage: e.toString());
     }
@@ -44,9 +32,8 @@ class EmployeeViewModel extends StateNotifier<EmployeeState> {
   Future<void> refreshEmployees() async {
     state = state.copyWith(isRefreshing: true);
     try {
-      final isOnline = await _connectivityService.isConnected;
-      final data = await _repository.getEmployees(forceRefresh: true);
-      _updatePagedState(allData: data, page: 1, isOffline: !isOnline);
+      final data = await _repository.getEmployees();
+      _updatePagedState(allData: data, page: 1);
     } catch (e) {
       state = state.copyWith(isError: true, errorMessage: e.toString());
     } finally {
@@ -76,7 +63,7 @@ class EmployeeViewModel extends StateNotifier<EmployeeState> {
     _updatePagedState(allData: updatedList, page: state.currentPage);
   }
 
-  void _updatePagedState({required List<EmployeeModel> allData, required int page, bool? isOffline}) {
+  void _updatePagedState({required List<EmployeeModel> allData, required int page}) {
     final adminEmail = _authRepository.getEmail()?.toLowerCase().trim();
     
     // Filter out administrator
@@ -94,7 +81,6 @@ class EmployeeViewModel extends StateNotifier<EmployeeState> {
       employees: sliced,
       currentPage: page,
       hasMoreData: hasMore,
-      isOffline: isOffline ?? state.isOffline,
       isLoading: false,
     );
     _applyFilters();

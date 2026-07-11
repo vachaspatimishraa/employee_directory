@@ -1,8 +1,5 @@
 # 👨‍💼 Employee Directory
 
-<p align="center">
-  <img src="assets/images/logo.png" width="140" alt="Employee Directory Logo">
-</p>
 
 <p align="center">
 A modern <b>Flutter Employee Directory</b> application built using <b>MVVM + Repository Pattern + Riverpod</b>. The application enables administrators to manage employees efficiently with support for offline caching, favorites, profile management, and a clean Material 3 interface.
@@ -23,7 +20,7 @@ A modern <b>Flutter Employee Directory</b> application built using <b>MVVM + Rep
 
 <p align="center">
 
-## ⬇️ **[Download Latest APK](https://github.com/yourusername/employee-directory/releases/latest/download/app-release.apk)**
+## ⬇️ **[Download Latest APK](https://github.com/vachaspatimishraa/employee-directory/build/app/outputs/flutter-apk/app-release.apk)**
 
 </p>
 
@@ -34,7 +31,7 @@ A modern <b>Flutter Employee Directory</b> application built using <b>MVVM + Rep
 # ✨ Features
 
 ## 🔐 Authentication
-
+[build](build)
 - Login Screen
 - Email Validation
 - Password Validation

@@ -7,7 +7,6 @@ class EmployeeState {
   final List<EmployeeModel> favoriteEmployees;
   final bool isLoading;
   final bool isRefreshing;
-  final bool isOffline;
   final bool isError;
   final String? errorMessage;
   final int currentPage;
@@ -20,7 +19,6 @@ class EmployeeState {
     this.favoriteEmployees = const [],
     this.isLoading = false,
     this.isRefreshing = false,
-    this.isOffline = false,
     this.isError = false,
     this.errorMessage,
     this.currentPage = 1,
@@ -34,7 +32,6 @@ class EmployeeState {
     List<EmployeeModel>? favoriteEmployees,
     bool? isLoading,
     bool? isRefreshing,
-    bool? isOffline,
     bool? isError,
     String? errorMessage,
     int? currentPage,
@@ -47,7 +44,6 @@ class EmployeeState {
       favoriteEmployees: favoriteEmployees ?? this.favoriteEmployees,
       isLoading: isLoading ?? this.isLoading,
       isRefreshing: isRefreshing ?? this.isRefreshing,
-      isOffline: isOffline ?? this.isOffline,
       isError: isError ?? this.isError,
       errorMessage: errorMessage,
       currentPage: currentPage ?? this.currentPage,

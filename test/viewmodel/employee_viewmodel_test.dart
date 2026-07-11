@@ -3,17 +3,13 @@ import 'package:mocktail/mocktail.dart';
 import 'package:employee_directory/features/employee/viewmodel/employee_viewmodel.dart';
 import 'package:employee_directory/features/employee/repository/employee_repository.dart';
 import 'package:employee_directory/features/employee/model/employee_model.dart';
-import 'package:employee_directory/core/network/connectivity_service.dart';
-
 import 'package:employee_directory/features/auth/repository/auth_repository.dart';
 
 class MockEmployeeRepository extends Mock implements EmployeeRepository {}
-class MockConnectivityService extends Mock implements ConnectivityService {}
 class MockAuthRepository extends Mock implements AuthRepository {}
 
 void main() {
   late MockEmployeeRepository mockRepository;
-  late MockConnectivityService mockConnectivityService;
   late MockAuthRepository mockAuthRepository;
   late EmployeeViewModel viewModel;
 
@@ -29,20 +25,16 @@ void main() {
 
   setUp(() {
     mockRepository = MockEmployeeRepository();
-    mockConnectivityService = MockConnectivityService();
-    
     mockAuthRepository = MockAuthRepository();
     
-    when(() => mockConnectivityService.connectivityStream).thenAnswer((_) => const Stream.empty());
-    when(() => mockConnectivityService.isConnected).thenAnswer((_) async => true);
-    when(() => mockRepository.getEmployees(forceRefresh: any(named: 'forceRefresh'))).thenAnswer((_) async => mockEmployees);
+    when(() => mockRepository.getEmployees()).thenAnswer((_) async => mockEmployees);
     when(() => mockAuthRepository.getEmail()).thenReturn('admin@example.com');
 
-    viewModel = EmployeeViewModel(mockRepository, mockConnectivityService, mockAuthRepository);
+    viewModel = EmployeeViewModel(mockRepository, mockAuthRepository);
   });
 
   group('EmployeeViewModel Tests', () {
-    test('Initial loading state is active and loads page 1 (5 items)', () async {
+    test('Initial loading state loads page 1 (5 items)', () async {
       await Future.delayed(Duration.zero);
       
       final state = viewModel.state;
@@ -80,12 +72,27 @@ void main() {
       updatedEmployees[0] = updatedEmployees[0].copyWith(isFavorite: true);
       
       when(() => mockRepository.toggleFavorite(1)).thenAnswer((_) async => {});
-      when(() => mockRepository.getEmployees(forceRefresh: any(named: 'forceRefresh'))).thenAnswer((_) async => updatedEmployees);
+      when(() => mockRepository.getEmployees()).thenAnswer((_) async => updatedEmployees);
       
       await viewModel.toggleFavorite(1);
       
       expect(viewModel.state.favoriteEmployees.length, 1);
       expect(viewModel.state.favoriteEmployees.first.id, 1);
+    });
+   group('Administrator Filtering', () {
+      test('filters out the logged-in administrator by email', () async {
+        final adminEmail = 'admin@example.com';
+        when(() => mockAuthRepository.getEmail()).thenReturn(adminEmail);
+        
+        final listWithAdmin = List<EmployeeModel>.from(mockEmployees);
+        listWithAdmin.add(EmployeeModel(id: 99, name: 'Admin User', email: adminEmail));
+        
+        when(() => mockRepository.getEmployees()).thenAnswer((_) async => listWithAdmin);
+        
+        await viewModel.loadEmployees();
+        
+        expect(viewModel.state.allEmployees.any((e) => e.email == adminEmail), false);
+      });
     });
   });
 }

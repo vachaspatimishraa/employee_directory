@@ -22,13 +22,13 @@ class CompanyCard extends StatelessWidget {
         ),
         const Divider(height: 1, indent: 48),
         InfoTile(
-          icon: Icons.lightbulb_outline_rounded,
+          icon: Icons.lightbulb_outlined,
           label: 'Catch Phrase',
           value: company?.catchPhrase ?? 'N/A',
         ),
         const Divider(height: 1, indent: 48),
         InfoTile(
-          icon: Icons.work_outline_rounded,
+          icon: Icons.work_outlined,
           label: 'Business Scope',
           value: company?.bs ?? 'N/A',
         ),

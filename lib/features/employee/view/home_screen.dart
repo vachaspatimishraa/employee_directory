@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import '../provider/employee_provider.dart';
 import '../widgets/employee_card.dart';
 import '../widgets/employee_search_bar.dart';
-import '../widgets/cached_banner.dart';
 import '../widgets/employee_shimmer.dart';
 import '../../../core/widgets/error_widget.dart';
 import '../../../core/widgets/empty_widget.dart';
@@ -41,7 +40,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final employeeState = ref.watch(employeeViewModelProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -63,7 +61,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       body: Column(
         children: [
-          if (_selectedIndex != 2) CachedBanner(isVisible: employeeState.isOffline),
           if (_selectedIndex != 2)
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -77,8 +74,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: IndexedStack(
               index: _selectedIndex,
               children: [
-                _EmployeesListTab(isFavorites: false),
-                _EmployeesListTab(isFavorites: true),
+                const _EmployeesListTab(isFavorites: false),
+                const _EmployeesListTab(isFavorites: true),
                 AddEmployeeScreen(
                   onSaved: () => _onItemTapped(0),
                 ),
@@ -92,17 +89,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         onDestinationSelected: _onItemTapped,
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.people_outline),
+            icon: Icon(Icons.people_outlined),
             selectedIcon: Icon(Icons.people),
             label: 'All',
           ),
           NavigationDestination(
-            icon: Icon(Icons.favorite_outline),
+            icon: Icon(Icons.favorite_border),
             selectedIcon: Icon(Icons.favorite),
             label: 'Favorites',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_add_outlined),
+            icon: Icon(Icons.person_add),
             selectedIcon: Icon(Icons.person_add),
             label: 'Add',
           ),
@@ -179,7 +176,7 @@ class _EmployeesListTabState extends ConsumerState<_EmployeesListTab> {
     if (employeeState.isError && employeeState.employees.isEmpty) {
       return AppErrorWidget(
         errorMessage: employeeState.errorMessage ?? 'Something went wrong',
-        onRetry: () => ref.read(employeeViewModelProvider.notifier).loadEmployees(forceRefresh: true),
+        onRetry: () => ref.read(employeeViewModelProvider.notifier).loadEmployees(),
       );
     }
 
@@ -190,8 +187,8 @@ class _EmployeesListTabState extends ConsumerState<_EmployeesListTab> {
         title: widget.isFavorites ? 'No Favorites Found' : 'No Employees Found',
         description: widget.isFavorites 
             ? 'Mark employees as favorite to see them here.' 
-            : 'Try searching for another name or email.',
-        icon: widget.isFavorites ? Icons.favorite_border_rounded : Icons.search_off_rounded,
+            : 'Tap "Add Employee" to create your first employee.',
+        icon: widget.isFavorites ? Icons.favorite_border : Icons.search_off_rounded,
       );
     }
 

@@ -51,7 +51,7 @@ class _FavoriteButtonState extends State<FavoriteButton> with SingleTickerProvid
       scale: _scaleAnimation,
       child: IconButton(
         icon: Icon(
-          widget.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+          widget.isFavorite ? Icons.favorite : Icons.favorite_border,
           color: widget.isFavorite ? Colors.redAccent : Colors.grey,
         ),
         onPressed: widget.onTap,

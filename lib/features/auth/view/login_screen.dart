@@ -124,7 +124,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           controller: _passwordController,
                           labelText: 'Password',
                           hintText: 'Enter your password',
-                          prefixIcon: Icons.lock_outline,
+                          prefixIcon: Icons.lock_outlined,
                           obscureText: loginState.obscurePassword,
                           textInputAction: TextInputAction.done,
                           onFieldSubmitted: (_) => _handleLogin(),

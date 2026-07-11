@@ -206,7 +206,7 @@ class EmployeeDetailScreen extends ConsumerWidget {
                   Expanded(
                     child: FilledButton.icon(
                       onPressed: () => _deleteEmployee(context, ref),
-                      icon: const Icon(Icons.delete_outline_rounded),
+                      icon: const Icon(Icons.delete_outlined),
                       label: const Text('Delete'),
                       style: FilledButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.error,

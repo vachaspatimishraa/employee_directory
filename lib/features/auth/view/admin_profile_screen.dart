@@ -235,7 +235,7 @@ class _AdminProfileScreenState extends ConsumerState<AdminProfileScreen> {
                       controller: _nameController,
                       labelText: 'Full Name',
                       hintText: 'Enter full name',
-                      prefixIcon: Icons.person_outline_rounded,
+                      prefixIcon: Icons.person_outline,
                     ),
                   ],
                 ),
@@ -254,7 +254,7 @@ class _AdminProfileScreenState extends ConsumerState<AdminProfileScreen> {
                       controller: _designationController,
                       labelText: 'Designation',
                       hintText: 'Enter job designation',
-                      prefixIcon: Icons.badge_outlined,
+                      prefixIcon: Icons.badge,
                     ),
                   ],
                 ),
@@ -294,7 +294,7 @@ class _AdminProfileScreenState extends ConsumerState<AdminProfileScreen> {
                       controller: _suiteController,
                       labelText: 'Suite',
                       hintText: 'Enter suite/apartment number',
-                      prefixIcon: Icons.door_front_door_outlined,
+                      prefixIcon: Icons.meeting_room_outlined,
                     ),
                     const SizedBox(height: 16),
                     AppTextField(
@@ -345,7 +345,7 @@ class _AdminProfileScreenState extends ConsumerState<AdminProfileScreen> {
                     ),
                     const Divider(height: 1, indent: 48),
                     InfoTile(
-                      icon: Icons.person_outline_rounded,
+                      icon: Icons.person_outline,
                       label: 'Full Name',
                       value: profile.name?.isNotEmpty == true ? profile.name! : 'N/A',
                     ),
@@ -377,7 +377,7 @@ class _AdminProfileScreenState extends ConsumerState<AdminProfileScreen> {
                     ),
                     const Divider(height: 1, indent: 48),
                     InfoTile(
-                      icon: Icons.badge_outlined,
+                      icon: Icons.badge,
                       label: 'Designation',
                       value: profile.designation?.isNotEmpty == true ? profile.designation! : 'N/A',
                     ),
@@ -394,7 +394,7 @@ class _AdminProfileScreenState extends ConsumerState<AdminProfileScreen> {
                     ),
                     const Divider(height: 1, indent: 48),
                     InfoTile(
-                      icon: Icons.door_front_door_outlined,
+                      icon: Icons.meeting_room_outlined,
                       label: 'Suite',
                       value: profile.suite?.isNotEmpty == true ? profile.suite! : 'N/A',
                     ),

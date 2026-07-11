@@ -20,7 +20,7 @@ class AppErrorWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline_rounded,
+              Icons.error_outline,
               color: theme.colorScheme.error,
               size: 64,
             ),
