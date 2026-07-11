@@ -24,14 +24,11 @@ A modern <b>Flutter Employee Directory</b> application built using <b>MVVM + Rep
 
 </p>
 
-> Replace the above URL with your GitHub Releases APK link before publishing.
-
 ---
 
 # ✨ Features
 
 ## 🔐 Authentication
-[build](build)
 - Login Screen
 - Email Validation
 - Password Validation
@@ -390,15 +387,9 @@ build/app/outputs/flutter-apk/app-release.apk
 
 # 👨‍💻 Developed By
 
-**Lucky**
+**Vachaspati Mishra**
 
 Flutter Developer
-
----
-
-# ⭐ Support
-
-If you found this project useful, consider giving it a ⭐ on GitHub!
 
 ---
 
