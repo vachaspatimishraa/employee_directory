@@ -20,7 +20,7 @@ A modern <b>Flutter Employee Directory</b> application built using <b>MVVM + Rep
 
 <p align="center">
 
-## ⬇️ **[Download Latest APK](https://github.com/vachaspatimishraa/employee-directory/build/app/outputs/flutter-apk/app-release.apk)**
+## ⬇️ **[Download Latest APK](https://github.com/vachaspatimishraa/employee_directory/raw/main/apk/app-release.apk)**
 
 </p>
 
